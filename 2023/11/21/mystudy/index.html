@@ -28,7 +28,7 @@
 <meta property="og:description" content="概述erlang杂项 erlang杂项">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-11-21T12:18:51.000Z">
-<meta property="article:modified_time" content="2023-12-06T03:50:44.760Z">
+<meta property="article:modified_time" content="2024-01-15T02:53:46.503Z">
 <meta property="article:author" content="AgatheChristie">
 <meta property="article:tag" content="erlang">
 <meta name="twitter:card" content="summary">
@@ -197,7 +197,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-12-06 11:50:44" itemprop="dateModified" datetime="2023-12-06T11:50:44+08:00">2023-12-06</time>
+                <time title="修改时间：2024-01-15 10:53:46" itemprop="dateModified" datetime="2024-01-15T10:53:46+08:00">2024-01-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -231,10 +231,10 @@
 <p>–符号的运算顺序是从右到左可以分两步执行或者用括号括起来([1,2,3,2] –[2]) –[2].</p>
 <h3 id="运算符"><a href="#运算符" class="headerlink" title="++运算符"></a>++运算符</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">lists:append()</span><br><span class="line">M++N会遍历列表M所以如果必须要使用++也要让数据量小的List在前面</span><br></pre></td></tr></table></figure>
 
-
-
-
-
+<h3 id="ets"><a href="#ets" class="headerlink" title="ets"></a>ets</h3><p>1.hash table 通过用空间换时间的方式，将查找时间从O(n)下降到O(1) 主要是加快查找速度</p>
+<p>2.ETS表在内部是用散列表(哈希表)表示的(除了有序异键表 他是平衡二叉树)</p>
+<p>3.异键表 少许空间开销 插入所需时间 恒定<br>4.有序异键表 时间开销 插入所需时间 表内条目数量的对数成比例</p>
+<p>5.ETS里面查数据的速度 和数据条数的多少没有关系 和每条数据的大小有关<br>《Erlang程序设计第二版page254》</p>
 
     </div>
 
@@ -352,7 +352,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#erlang%E6%9D%82%E9%A1%B9"><span class="nav-number">1.1.</span> <span class="nav-text">erlang杂项</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#UTF%E7%BC%96%E7%A0%81%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.1.</span> <span class="nav-text">UTF编码问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%80%93%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="nav-number">1.1.2.</span> <span class="nav-text">–运算符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="nav-number">1.1.3.</span> <span class="nav-text">++运算符</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#erlang%E6%9D%82%E9%A1%B9"><span class="nav-number">1.1.</span> <span class="nav-text">erlang杂项</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#UTF%E7%BC%96%E7%A0%81%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.1.</span> <span class="nav-text">UTF编码问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%80%93%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="nav-number">1.1.2.</span> <span class="nav-text">–运算符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="nav-number">1.1.3.</span> <span class="nav-text">++运算符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ets"><span class="nav-number">1.1.4.</span> <span class="nav-text">ets</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -368,7 +368,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -432,7 +432,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2023</span>
+  <span itemprop="copyrightYear">2024</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
