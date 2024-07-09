@@ -20,15 +20,15 @@
     var CONFIG = {"hostname":"agathechristie.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="概述设置Git全局代理，解决无法pull和push问题">
+  <meta name="description" content="内容已加密，请输入密码后阅读">
 <meta property="og:type" content="article">
-<meta property="og:title" content="github学习">
+<meta property="og:title" content="github代理学习">
 <meta property="og:url" content="https://agathechristie.github.io/2023/11/21/github/index.html">
 <meta property="og:site_name" content="AgatheChristie&#96;s Blog">
-<meta property="og:description" content="概述设置Git全局代理，解决无法pull和push问题">
+<meta property="og:description" content="内容已加密，请输入密码后阅读">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-11-21T12:18:51.000Z">
-<meta property="article:modified_time" content="2023-12-18T14:12:41.968Z">
+<meta property="article:modified_time" content="2024-07-09T09:47:10.595Z">
 <meta property="article:author" content="AgatheChristie">
 <meta property="article:tag" content="github">
 <meta name="twitter:card" content="summary">
@@ -46,7 +46,7 @@
   };
 </script>
 
-  <title>github学习 | AgatheChristie`s Blog</title>
+  <title>github代理学习 | AgatheChristie`s Blog</title>
   
 
 
@@ -180,7 +180,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          github学习
+          github代理学习
         </h1>
 
         <div class="post-meta">
@@ -197,7 +197,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-12-18 22:12:41" itemprop="dateModified" datetime="2023-12-18T22:12:41+08:00">2023-12-18</time>
+                <time title="修改时间：2024-07-09 17:47:10" itemprop="dateModified" datetime="2024-07-09T17:47:10+08:00">2024-07-09</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -220,23 +220,18 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>设置Git全局代理，解决无法pull和push问题</p>
-<span id="more"></span>
-
-<h2 id="设置Git代理-http-or-socks5"><a href="#设置Git代理-http-or-socks5" class="headerlink" title="设置Git代理 http or socks5"></a>设置Git代理 http or socks5</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global http.proxy &#x27;http://127.0.0.1:15235&#x27;</span><br><span class="line">git config --global https.proxy &#x27;http://127.0.0.1:15235&#x27;</span><br></pre></td></tr></table></figure>
-<h3 id="全局"><a href="#全局" class="headerlink" title="全局"></a>全局</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global http.proxy &#x27;socks5://127.0.0.1:15235&#x27;</span><br><span class="line">git config --global https.proxy &#x27;socks5://127.0.0.1:15235&#x27;</span><br></pre></td></tr></table></figure>
-<h3 id="本地"><a href="#本地" class="headerlink" title="本地"></a>本地</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --local http.proxy &#x27;127.0.0.1:15235&#x27;</span><br><span class="line">git config --local https.proxy &#x27;127.0.0.1:15235&#x27;</span><br></pre></td></tr></table></figure>
-
-<h2 id="取消Git代理"><a href="#取消Git代理" class="headerlink" title="取消Git代理"></a>取消Git代理</h2><h3 id="全局-1"><a href="#全局-1" class="headerlink" title="全局"></a>全局</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global --unset http.proxy</span><br><span class="line">git config --global --unset https.proxy</span><br></pre></td></tr></table></figure>
-<h3 id="本地-1"><a href="#本地-1" class="headerlink" title="本地"></a>本地</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --local --unset http.proxy</span><br><span class="line">git config --local --unset https.proxy</span><br></pre></td></tr></table></figure>
-<h2 id="查看Git代理"><a href="#查看Git代理" class="headerlink" title="查看Git代理"></a>查看Git代理</h2><h3 id="全局-2"><a href="#全局-2" class="headerlink" title="全局"></a>全局</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global http.proxy</span><br><span class="line">git config --global https.proxy</span><br></pre></td></tr></table></figure>
-<h3 id="全局-3"><a href="#全局-3" class="headerlink" title="全局"></a>全局</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --local http.proxy</span><br><span class="line">git config --local https.proxy</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
+        <div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="密码错误，请重试" data-whm="OOPS, these decrypted content may changed, but you can still have a look.">
+  <script id="hbeData" type="hbeData" data-hmacdigest="fb667a69d9591f76b8808f01edacecf6b78f53742ba4305dcbcf00ba2a702677">5b5f4aa941f93f3143862da73080d823c5b7df812706018c4a9914655aceacb1d92e49067c2e5dc6243b599f4bc917a3e261e01641f398df5f62fefabfd70a5fdb6c384183acb1ee0d622a37faa055a98dcf999fde2d87dc671584266b8bc4af45e793fc495f6b936a15c7fd11139a9b7f39bb9927d9c51d92f83a7d07fde6bfb2f85af2ceb26cf722f823779513b9fb5a9dfa7dc83f29cc923b4d2cdd4a0db59305c777302ba344209e037e7aff0c8b7d65b3e826ad93f6d8c00e80d8cd0dc609afce82fc0079c3c585924aa31de86fad7ec79c51a906cc769c56405b99668facfe8a58640032a97d2702a351707cb9e4482768f4bb63873b8854afaf996902d6ea80ea88071b896e96901548f4baaed8502d205acaa9c36c7f04e7d81bd084f5030be7066859bac07aafe63245f84809f46f8d6dbf304154a83dedc6c5fc99f32e1362b6db7e32a6f5f66c5b87e87d2f2af8914a4cf01de50f83286de7a4208946b4ad3ba56cd4bd3cf4e0438bc5ddba6adcc6b2958e06f77496c2500f52ea93f2127b260dba1ed790c32916dc7a09b5e4e772f1bdaaa424f14bef4889febba1188de32c649337df0eff90267c90d8606a9c26dc14037d43b9ceeac1c32637c88b45c75d8fe71b4542697a48e5a652cc2d1de61de72639101315346796a3198d47618cf4374d9b4dd1b8273b8213ef9b651efade338738989a1e7678d590fd74434b02a5ca2dacf6f828323602806a8556ae458e13b792659cb4526a0128a189be279891311e4ba2b357c628b176cda4eceefa96877e68472b0bd75b7a37f00d2be3a3bf3eddf74409d035be56693a2c1e5209dc9af9857d9b304d7e55336e9182f818cb9daf34165719b1a294c9152951d77f4133fc7a6667718ac3506538e49bfb7a402495873c45568835f1252af63ed74ba089a13dbf44c2dc170e1cc98c4a85b873beedddc525ead5d769bb8f40bdc35b73fa9dcb39af6f1c9ded6c96a74e9dab62a5bff690ef941d0c9177de65c4cc4018db5b652b11a9de523dd4b539d70f9caed2cd3999014761b2ca904270d450338d35bf4ee420b0080628791e153e3e291635a0c986b56128aba721b69ddf1a8f99ad0d6c5eee9ab3dd7f0e9159222c588277bd1b9857cd67f4af1c51eda951b41619f3da9a0049cf6af61daee98b6ec99311485244886adee5b11ae208c552a82f2294e7288f345c491b4341bf41676865c3a5438d00943e7905ecc40c71db92bcb46aaccb804e49370f37d1927a05e7d971917045f52fb81409ed946d1b21b373eac2d12ab58ff0266eebb7936f6010912e5865b5b61fee2c6aeb1287644bc6da3b7f7e5732257b4b38dd7e6ee08fe1de4366ab9fc72a1c5da0dec86b4d6986e3f2665ab60e1af92719bcaf321250788521210e6f863ead5040ff1a5b34f05e74b8558051a4d7ccb33b75f63a885e9280dff9e97ca469feee05795216c073d63366c7438afcea6e7e0e86e6e3dfb659be1116d47962ce74ca8fc32250829ac984a5daa1dd3b0a36f47d420cb2659ae4dafa0ec111bf1f51a6f74843ac280e8cbcbc224a5569f2febc19c3b90cd6c81d692eb19562c8ef741622149d16e0ac7efc20f91026b33187f6c7047d7edbaad7070422b3bd6cff79b1285772f474c6e4cfe7b876e96dd45d25133f8f48c4a7e3b3bbb2000c55cf5f2ed34af040190bec1974cf2fc71edb0a5e4eb2dae7eb3ba0aa8971b7dd73d4e86f268a8064e89fbf2a3fc001dd62a1849cbc03419bbf4284c8e863382894d849828b71bd2b7d7ffbba04490e37b14d4e2fe280e6faaf4c76313e5ae0dc6213e556a1b86d1ec44e8f805fa3ae6d493054598853145b0c040339ec657ee3f74043f278e6588b941eaf545c2345fd86961ac6cff40f25d1b4951626fcb56e25f625b7e17a488071787de78173d341edff64ac5cd5ec1e3bb6109681ff32917181d9f408f1ee6a055ff2d459c629efdff0f2e41c2df2d50acda13f6afc5dea835831bfda17d8cc146be4f58c70f7ada44fc1ce7be7cab98bda9e4f03ab61fd1a46a7d4f96c58b90e9fe2cf2ab3568988ac34236276088354db210cf47fc6aa882dc88b3e8054c9ccd6456f4ade5d42d3374dd8eaafff51497d7f785c4f7427c4429678c2b43803fc22378cc793ae8685f67b6a7045ad2881be5d8ddec42fdb5abd9676f7f30f225567ffdf655716f65c4f0909baf074686bf742658830fa2e5875794fe53fecab5b446b7de6146eef6abd4df13615b72ab4d7035364bf39d53209b9c88f2330ccaaec8dd984f89fd2c39fe8561e6bb4394de50815a89aba541beb9fd0f641cb0840f8cda4ddfa3fc8fa4d0633fbf5c5d2e31047a96c573409319b143207ccc68deb7463b580b16fb354c0503f1f1ba6fc51fd5afb963ba6463f5dcf99fced4709ba73d61351283c1b74f55f1a7e6858d59f042365341e8642f10507944654130a8fabd33220e3f909e5d918b471adf407f0e7a7d5690f45be416cdfe622bddd1ff0d57f2c4a3246a49715c9871aa48a1fc81b513c42aebe83837429b410d7e70634ab1cc5a0621e60467098c5cd0a330bcfcd88824855ae112d8666b4f9d839bd1ae0a2e89b4b6eac3289e55572a4ac0f445147dc8d164a8951f8b3f1aa0afb54eb23b0412c7fd44e5fa10180145cc2a99fe1d61bf01d1e30058d4964d89d89c6ac8bf2fac057f1a170598fa1ac8b140cf31fd6c2703711bf4340c1a5ff806ad16083671330b2526850641ed641361955c29cc50545844f6106a2cd94bcb2d4ab435f4b93ef538aa01bece30abbe3b272e5ece84680bc580dc93f53d85cc7b076ecc9e8f215ed06faceabe716453b62709d201640a021f3b788c8f03e5e81b870f2a5bbd7b5ac1c9850773a698f7c289a1ab5961c1cac36ca1a8ff2f5f460cc04ab6c03f0f76ed066dab2462a7b76833d11949debf431133f290b2e67d8311e1b18189aa6317826715bd83574cb7b55badfc4515fca0958573689aa45bf687a706fabe5a6e147416b88a335823c787ade35da187933fc583d200df7c7022543113fc6b44d855824b51f335b7ddcc1401913ee4613c4389a13ed3a4be583bdb06c53a3560b99735ed85810b711d2393fa76c7734e1c39a7e753e80404b2b679318f47767014291b337e33ba260d38123f8f94ba1611d7695ff12f01cbf6ca478d473023d9576b5d17ba74f0ce6a2c9794bd4dc1168666231fffd98003206249fa53c190e01b3039be09ff4908ce44c976f507518e10da2ce092a894498e059ecd057c56f9b78c9e5be39860055ccff57071c3cf08c61b13eaac670a2ebe516a440663e94f5fbfe647335fb1d80501e784f6264f6f19938d637f167a8f1af384957bf329753a5b1e02ae634d51a2b5e2e24e22a0fd1e64e2b2f421f80abd5bd7fc785393903c3b2007552207027d51b24a42c41c6ddb838c15a1307b47bf4d2c248778ded92f695ab031682da2a63a108487eb5c620568fec47154483b364b08f69132452934515713b020cee865f51e472a3bfc1a133980f0704f1939ed2699d30f61c6fd86ef91628c0cea123856c4a33ede8f9229bf5ed03c355f4e16a3cdd8e8b1a39f1054ab1e7e491ec21d8e08077cf67144aa3f81b7b52af2c2acc215715698acbd5dbdbd4be03776b416e43e718b6bbd2176188b2cb594802605a7598f1c4c4227a770cc731a19d49b4a165611a5a8206a803925e04e5b21b99e96622bf202b617725357e67063212afe0d79aeff44fe6fd3a5e6c7b729ea2dd8c39d74191ea08e0d0f4d1439fc43a6591f622083031b4ea2bfaf11144af5caa2fb94f89c771e46d909931d2d5e0717da31f05db5ca203a0c085f1efeab85867aed7218ede42671a097ebfcf689490fc7d7fe0c0188fa1d74f5e84cb602b8677ff1fae70f9f352b5903d012781bd6cce188604d8d7dcabb6733db5596388e77ac546052888bc98e52e72eacadd64b06f173307dd21cc1f114a354087c37e9868fd550b705a710f62a8e8b4285634f5f06a97fe0411442a5148e6f4b9f73587358d5520e68e8a20bc303b794fc00e53083eb487bf557ebae1689c33e15abba98d7e49323e0e7388e6150d0bdc25c8741213d4094c5ddb1d17094e1a4324e1c3a389b6927d63fe9bfa51039a2fa23aa2904622e8132b086b21deb87b40f1df7091de1ebe9d8f138f60df586f7d8b63ffc29ca80b610f769309320e2663d106d15d51e907125987067d37977f6398a752a4054dfd212851ca7c68536cc0a9f3fb4443e3900388441041c002e409741d31048ebda013a2fe4984f618ee48744248c3a9a54750d93ccd2209a852962c6923d7f2f7d90ccf37c127d5d4859cb28006518c14635bea6561d078ea77d0ce9f08537ad0bbb8789a38f6b83862f9317d7c8eb34dfadd26a5590547b2db0f249a8f7297f63882c99f4c1958f30bcca3221a0889e6d616f0be6d20a00a67503df08a2e05fc66eac34bde04195203ee651be93cf9ccffef69c9d8009e104bafb2815cff524e67ad8413b8afcce2d00a1c0a470dc866da1b3b8cd673e11b51c94cc03bbde1d8488ff0970b5343f4dac96c337296bea3b06fcb9f59ee02ecae0f836f43647e61d3b1930b90b6e7175577d5bd518b8fd25577ad84b8bc3fe28069bc1594375df9f932ffa1c4b66bbe38a46e7afde7e244742e4e9fd1922d099dcbcb173fce362a77786c1b2b2656a053abf311a0017a540e65856c7a23130a9e39be556d17cda56e11b515fe0c06c236a028710d9f16fa0bfbb79d0866955c95017ddda8fdba29a473f7687ff87ed802b39373065da4222960458b19e193548718e1b66e29ea1c181fc2796bc3c39dc12645f683059e9854a7f0f9f2b819cd121469762e10f945ce43d3044feb0245eb1ac56d752d69405dbc8481deb6c4523ad65245670dca1ec93aceb123f520dd441d90c5b57353e979c9c2b71c4b1c82f07e6130bff5dc3b8bef7212c484c6ab155408b0668418513f108192c888fd5fe3656837e5635e557251791a1c28ca532c80d4314be39a1a1f9fe60b1970e52365818531d946a4a163</script>
+  <div class="hbe hbe-content">
+    <div class="hbe hbe-input hbe-input-default">
+      <input class="hbe hbe-input-field hbe-input-field-default" type="password" id="hbePass">
+      <label class="hbe hbe-input-label hbe-input-label-default" for="hbePass">
+        <span class="hbe hbe-input-label-content hbe-input-label-content-default">内容已加密，请输入密码后阅读</span>
+      </label>
+    </div>
+  </div>
+</div>
+<script data-pjax src="/lib/hbe.js"></script><link href="/css/hbe.style.css" rel="stylesheet" type="text/css">
     </div>
 
     
@@ -271,7 +266,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://agathechristie.github.io/2023/11/21/github/" title="github学习">https://agathechristie.github.io/2023/11/21/github/</a>
+    <a href="https://agathechristie.github.io/2023/11/21/github/" title="github代理学习">https://agathechristie.github.io/2023/11/21/github/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -291,8 +286,8 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/11/21/kill%20p/" rel="prev" title="windows下杀死进程">
-      <i class="fa fa-chevron-left"></i> windows下杀死进程
+    <a href="/2023/11/21/kaishimy/" rel="prev" title="hexo+github笔记">
+      <i class="fa fa-chevron-left"></i> hexo+github笔记
     </a></div>
       <div class="post-nav-item">
     <a href="/2023/11/21/erlangstudy/" rel="next" title="erlang学习">
@@ -356,7 +351,6 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AEGit%E4%BB%A3%E7%90%86-http-or-socks5"><span class="nav-number">1.1.</span> <span class="nav-text">设置Git代理 http or socks5</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%A8%E5%B1%80"><span class="nav-number">1.1.1.</span> <span class="nav-text">全局</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0"><span class="nav-number">1.1.2.</span> <span class="nav-text">本地</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%96%E6%B6%88Git%E4%BB%A3%E7%90%86"><span class="nav-number">1.2.</span> <span class="nav-text">取消Git代理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%A8%E5%B1%80-1"><span class="nav-number">1.2.1.</span> <span class="nav-text">全局</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0-1"><span class="nav-number">1.2.2.</span> <span class="nav-text">本地</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8BGit%E4%BB%A3%E7%90%86"><span class="nav-number">1.3.</span> <span class="nav-text">查看Git代理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%A8%E5%B1%80-2"><span class="nav-number">1.3.1.</span> <span class="nav-text">全局</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%A8%E5%B1%80-3"><span class="nav-number">1.3.2.</span> <span class="nav-text">全局</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
