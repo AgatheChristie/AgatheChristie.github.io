@@ -20,23 +20,25 @@
     var CONFIG = {"hostname":"agathechristie.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="概述最近用 Erlang 完整实现了 SillyTavern（俗称”酒馆”）的双记忆系统——即 Vector RAG + 滚动摘要的架构。这个项目让我对 RAG 系统的设计和实现有了更深的理解。本文是对整个实现过程的总结，记录了已实现的功能、踩过的坑，以及还有哪些可以改进的地方。">
+  <meta name="description" content="概述XianTu（仙途）是一个AI 驱动的修仙文字冒险游戏，采用”AI 即游戏引擎”的创新架构——所有游戏逻辑都由 LLM 计算，前端代码仅负责执行指令和渲染界面。本文是对该项目技术架构和核心系统的深度分析总结。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="SillyTavern 记忆系统 Erlang 实现总结">
-<meta property="og:url" content="https://agathechristie.github.io/2026/03/06/sttt-memory-summary/index.html">
+<meta property="og:title" content="XianTu（仙途）项目深度分析">
+<meta property="og:url" content="https://agathechristie.github.io/2026/03/06/xiantu-project-analysis/index.html">
 <meta property="og:site_name" content="胡上彪&#96;s Blog">
-<meta property="og:description" content="概述最近用 Erlang 完整实现了 SillyTavern（俗称”酒馆”）的双记忆系统——即 Vector RAG + 滚动摘要的架构。这个项目让我对 RAG 系统的设计和实现有了更深的理解。本文是对整个实现过程的总结，记录了已实现的功能、踩过的坑，以及还有哪些可以改进的地方。">
+<meta property="og:description" content="概述XianTu（仙途）是一个AI 驱动的修仙文字冒险游戏，采用”AI 即游戏引擎”的创新架构——所有游戏逻辑都由 LLM 计算，前端代码仅负责执行指令和渲染界面。本文是对该项目技术架构和核心系统的深度分析总结。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2026-03-06T08:00:00.000Z">
-<meta property="article:modified_time" content="2026-03-06T08:03:41.264Z">
+<meta property="article:published_time" content="2026-03-06T09:55:00.000Z">
+<meta property="article:modified_time" content="2026-03-06T09:59:21.371Z">
 <meta property="article:author" content="胡上彪">
-<meta property="article:tag" content="SillyTavern">
-<meta property="article:tag" content="Erlang">
 <meta property="article:tag" content="RAG">
-<meta property="article:tag" content="记忆系统">
+<meta property="article:tag" content="XianTu">
+<meta property="article:tag" content="仙途">
+<meta property="article:tag" content="AI游戏">
+<meta property="article:tag" content="Vue3">
+<meta property="article:tag" content="修仙游戏">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://agathechristie.github.io/2026/03/06/sttt-memory-summary/">
+<link rel="canonical" href="https://agathechristie.github.io/2026/03/06/xiantu-project-analysis/">
 
 
 <script id="page-configurations">
@@ -49,7 +51,7 @@
   };
 </script>
 
-  <title>SillyTavern 记忆系统 Erlang 实现总结 | 胡上彪`s Blog</title>
+  <title>XianTu（仙途）项目深度分析 | 胡上彪`s Blog</title>
   
 
 
@@ -170,7 +172,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://agathechristie.github.io/2026/03/06/sttt-memory-summary/">
+    <link itemprop="mainEntityOfPage" href="https://agathechristie.github.io/2026/03/06/xiantu-project-analysis/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/benq.jpg">
@@ -183,7 +185,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          SillyTavern 记忆系统 Erlang 实现总结
+          XianTu（仙途）项目深度分析
         </h1>
 
         <div class="post-meta">
@@ -194,7 +196,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2026-03-06 16:00:00 / 修改时间：16:03:41" itemprop="dateCreated datePublished" datetime="2026-03-06T16:00:00+08:00">2026-03-06</time>
+              <time title="创建时间：2026-03-06 17:55:00 / 修改时间：17:59:21" itemprop="dateCreated datePublished" datetime="2026-03-06T17:55:00+08:00">2026-03-06</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -207,6 +209,10 @@
                   ，
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
                   <a href="/categories/%E6%8A%80%E6%9C%AF/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF/AI/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">游戏开发</span></a>
                 </span>
             </span>
 
@@ -221,119 +227,189 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>最近用 Erlang 完整实现了 SillyTavern（俗称”酒馆”）的双记忆系统——即 <strong>Vector RAG + 滚动摘要</strong>的架构。这个项目让我对 RAG 系统的设计和实现有了更深的理解。本文是对整个实现过程的总结，记录了已实现的功能、踩过的坑，以及还有哪些可以改进的地方。</p>
+        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>XianTu（仙途）是一个<strong>AI 驱动的修仙文字冒险游戏</strong>，采用”AI 即游戏引擎”的创新架构——所有游戏逻辑都由 LLM 计算，前端代码仅负责执行指令和渲染界面。本文是对该项目技术架构和核心系统的深度分析总结。</p>
 <span id="more"></span>
 
-<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>SillyTavern 是一个流行的 AI 聊天前端，底层对接各种 LLM API。它的记忆系统设计得相当精巧：同时维护两套记忆——向量记忆负责精确检索历史细节，摘要记忆负责维持宏观上下文。</p>
-<p>我的目标是用 Erlang 重写这套系统，适配自己的聊天后端。核心需求很明确：</p>
-<ul>
-<li>聊天记录能自动存入向量数据库</li>
-<li>检索时能召回最相关的历史消息</li>
-<li>长时间聊天能自动摘要，保持上下文连贯</li>
-</ul>
-<h2 id="核心架构"><a href="#核心架构" class="headerlink" title="核心架构"></a>核心架构</h2><h3 id="双记忆系统"><a href="#双记忆系统" class="headerlink" title="双记忆系统"></a>双记忆系统</h3><p>系统本质上是一个<strong>双通道并行架构</strong>：</p>
+<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p>XianTu 是一个基于现代前端技术栈构建的修仙文字冒险游戏，核心特点是将传统游戏引擎的逻辑计算全部交给 AI 完成，实现了一个高度动态、可扩展的游戏世界。</p>
+<h3 id="技术栈"><a href="#技术栈" class="headerlink" title="技术栈"></a>技术栈</h3><table>
+<thead>
+<tr>
+<th>类别</th>
+<th>技术</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>框架</td>
+<td>Vue 3.5 (Composition API)</td>
+</tr>
+<tr>
+<td>语言</td>
+<td>TypeScript 5.8</td>
+</tr>
+<tr>
+<td>状态管理</td>
+<td>Pinia 3.0</td>
+</tr>
+<tr>
+<td>路由</td>
+<td>Vue Router 4.6</td>
+</tr>
+<tr>
+<td>构建工具</td>
+<td>Webpack 5.99</td>
+</tr>
+<tr>
+<td>数据可视化</td>
+<td>Chart.js、Pixi.js</td>
+</tr>
+<tr>
+<td>本地存储</td>
+<td>IndexedDB</td>
+</tr>
+<tr>
+<td>AI 集成</td>
+<td>Gemini、Claude、OpenAI、DeepSeek</td>
+</tr>
+</tbody></table>
+<h2 id="核心架构：”AI-即游戏引擎”"><a href="#核心架构：”AI-即游戏引擎”" class="headerlink" title="核心架构：”AI 即游戏引擎”"></a>核心架构：”AI 即游戏引擎”</h2><p>XianTu 最核心的设计理念是<strong>所有游戏逻辑都由 LLM 计算</strong>，而不是传统游戏那样由代码引擎处理。</p>
+<h3 id="提示词里的公式-游戏规则书"><a href="#提示词里的公式-游戏规则书" class="headerlink" title="提示词里的公式 &#x3D; 游戏规则书"></a>提示词里的公式 &#x3D; 游戏规则书</h3><p>项目中的 <code>textFormats.ts</code> 包含了大量游戏公式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">最终+幸运+环境+状态</span><br><span class="line">判定值=基础属性权重:主×0.5+副×0.3+辅×0.2</span><br><span class="line">战斗攻击:根骨/灵性/气运</span><br><span class="line">境界等级:凡人0|练气1|筑基2|金丹3|元婴4|化神5|炼虚6|合体7|渡劫8</span><br></pre></td></tr></table></figure>
+
+<p>这些公式不是前端代码用来计算的，而是塞进 system prompt 里让 LLM 读的说明书。LLM 需要自己：</p>
+<ol>
+<li>根据当前角色属性 + 公式，算出判定值</li>
+<li>与难度基准对比，判定成功&#x2F;失败等级</li>
+<li>根据结果写叙事文本</li>
+</ol>
+<p>这种设计的优势是游戏内容高度动态，AI 可以根据玩家行为生成前所未有的剧情和机制。</p>
+<h2 id="四层记忆系统"><a href="#四层记忆系统" class="headerlink" title="四层记忆系统"></a>四层记忆系统</h2><p>XianTu 实现了完整的<strong>四层记忆系统</strong>，用于在长对话中保持游戏世界的连贯性：</p>
 <table>
 <thead>
 <tr>
-<th>通道</th>
-<th>技术</th>
+<th>层级</th>
+<th>名称</th>
 <th>作用</th>
+<th>生命周期</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>Vector RAG</td>
-<td>Embedding + 向量检索</td>
-<td>精确回忆细节，找到最相关的历史片段</td>
+<td>第1层</td>
+<td>短期记忆</td>
+<td>AI 每回合生成的叙事文本</td>
+<td>超过5条后自动淘汰</td>
 </tr>
 <tr>
-<td>Summarize</td>
-<td>LLM 滚动摘要</td>
-<td>压缩长期记忆，保持宏观上下文</td>
+<td>第2层</td>
+<td>隐式中期记忆</td>
+<td>AI 返回的 mid_term_memory 字段</td>
+<td>短期记忆淘汰时晋升为正式中期记忆</td>
+</tr>
+<tr>
+<td>第3层</td>
+<td>中期记忆</td>
+<td>累积的隐式中期记忆</td>
+<td>累积到25条后触发 AI 总结</td>
+</tr>
+<tr>
+<td>第4层</td>
+<td>长期记忆</td>
+<td>AI 总结的精炼摘要</td>
+<td>永久保留，支持向量检索</td>
 </tr>
 </tbody></table>
-<p>两套系统独立运行，最终通过 <code>build_memory_prompt</code> 合并注入到 LLM 的 system prompt 中。</p>
-<h3 id="数据流"><a href="#数据流" class="headerlink" title="数据流"></a>数据流</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">用户消息 → sync_chat → 计算哈希去重 </span><br><span class="line">                         ↓</span><br><span class="line">                  新消息入库 → 向量化存储 (pgvector)</span><br><span class="line">                         ↓</span><br><span class="line">              每 N 条消息触发 → maybe_update_summary</span><br><span class="line">                         ↓</span><br><span class="line">              LLM 摘要压缩 → 存入数据库</span><br><span class="line">                         </span><br><span class="line">查询时 ← 最近 2 条消息作为 query</span><br><span class="line">         ↓</span><br><span class="line">   向量检索召回 Top 5 + 阈值过滤</span><br><span class="line">         ↓</span><br><span class="line">   构建 prompt → 注入 LLM</span><br></pre></td></tr></table></figure>
+<h3 id="记忆流转流程"><a href="#记忆流转流程" class="headerlink" title="记忆流转流程"></a>记忆流转流程</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">每回合 AI 响应</span><br><span class="line">    ↓</span><br><span class="line">1. text → 写入【短期记忆】</span><br><span class="line">2. mid_term_memory → 写入【隐式中期记忆】</span><br><span class="line">    ↓ (短期记忆超过 5 条)</span><br><span class="line">短期记忆淘汰 → 隐式中期记忆晋升为【中期记忆】</span><br><span class="line">    ↓ (中期记忆累积到 25 条)</span><br><span class="line">触发 AI 总结 → 生成【长期记忆】摘要</span><br></pre></td></tr></table></figure>
 
-<h2 id="已实现功能"><a href="#已实现功能" class="headerlink" title="已实现功能"></a>已实现功能</h2><p>经过对照 SillyTavern 源码分析，核心功能已基本对齐：</p>
-<h3 id="✅-双记忆架构"><a href="#✅-双记忆架构" class="headerlink" title="✅ 双记忆架构"></a>✅ 双记忆架构</h3><ul>
-<li><code>build_memory_prompt/2</code> 同时处理向量检索和摘要两套并行通道</li>
-<li>最终合并注入 prompt，格式为 <code>## Summary</code> + <code>## Past events</code></li>
-</ul>
-<h3 id="✅-增量同步"><a href="#✅-增量同步" class="headerlink" title="✅ 增量同步"></a>✅ 增量同步</h3><ul>
-<li><code>sync_chat/2</code> 实现哈希去重</li>
-<li>对比已存消息，仅新增增量，逻辑完整</li>
-</ul>
-<h3 id="✅-向量检索"><a href="#✅-向量检索" class="headerlink" title="✅ 向量检索"></a>✅ 向量检索</h3><ul>
-<li><code>jiuguan_embedding</code> 支持批量 embedding</li>
-<li><code>jiuguan_db:search_similar/5</code> 实现余弦相似度检索 + 阈值过滤 (<code>MIN_SIMILARITY = 0.25</code>)</li>
-<li><code>query_chat_memory/2</code> 使用最近 2 条消息构建查询</li>
-</ul>
-<h3 id="✅-滚动摘要"><a href="#✅-滚动摘要" class="headerlink" title="✅ 滚动摘要"></a>✅ 滚动摘要</h3><ul>
-<li><code>maybe_update_summary/2</code> 每 10 条消息触发摘要</li>
-<li><code>do_update_summary/3</code> 用 LLM 合并旧摘要 + 新内容</li>
-<li>逻辑与 SillyTavern 的 Summary Extension 对齐</li>
-</ul>
-<h3 id="✅-存储层"><a href="#✅-存储层" class="headerlink" title="✅ 存储层"></a>✅ 存储层</h3><ul>
-<li>使用 PostgreSQL + pgvector（比 SillyTavern 原生的 vectra 文件索引更健壮）</li>
-<li>支持按 collection_id 隔离多聊天会话</li>
-<li>提供 <code>purge/1</code> 清空功能</li>
-</ul>
-<h2 id="踩过的坑"><a href="#踩过的坑" class="headerlink" title="踩过的坑"></a>踩过的坑</h2><h3 id="1-rearrangeChat-理解错误"><a href="#1-rearrangeChat-理解错误" class="headerlink" title="1. rearrangeChat 理解错误"></a>1. rearrangeChat 理解错误</h3><p>最初我把”检索后注入”理解成了简单的”追加到 prompt 末尾”。实际源码逻辑是：</p>
-<ul>
-<li>从原始 chat 数组中<strong>删除</strong>已检索的消息</li>
-<li>用压缩后的格式注入</li>
-</ul>
-<p>这一步我没有完全对齐，导致 prompt 可能会包含重复信息。</p>
-<h3 id="2-摘要存储位置"><a href="#2-摘要存储位置" class="headerlink" title="2. 摘要存储位置"></a>2. 摘要存储位置</h3><p>SillyTavern 把摘要存在 chat message 的 <code>extra.memory</code> 字段里，通过 <code>setExtensionPrompt</code> 注入。我则是单独存到数据库的 <code>jiuguan_summaries</code> 表，然后手动拼接到 system prompt。</p>
-<p>两种方式效果类似，但数据生命周期管理略有不同。</p>
-<h3 id="3-Embedding-来源"><a href="#3-Embedding-来源" class="headerlink" title="3. Embedding 来源"></a>3. Embedding 来源</h3><p>SillyTavern 支持 18+ 种 embedding 来源（OpenAI、Ollama、llama.cpp、transformers 等），我的实现暂时只支持 OpenAI 一种。</p>
-<h2 id="未实现的功能"><a href="#未实现的功能" class="headerlink" title="未实现的功能"></a>未实现的功能</h2><table>
+<h2 id="CoT-思维链系统"><a href="#CoT-思维链系统" class="headerlink" title="CoT 思维链系统"></a>CoT 思维链系统</h2><p>XianTu 使用思维链（Chain of Thought）技术来规范 AI 的输出格式和行为。核心提示词包含 7 大类、40+ 条检查项：</p>
+<h3 id="核心指令类别"><a href="#核心指令类别" class="headerlink" title="核心指令类别"></a>核心指令类别</h3><table>
 <thead>
 <tr>
-<th>功能</th>
-<th>优先级</th>
-<th>说明</th>
+<th>类别</th>
+<th>关键指令示例</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>Embedding 来源抽象</td>
-<td>中</td>
-<td>目前硬编码 OpenAI</td>
+<td>基础同步</td>
+<td>set 角色.位置、add 元数据.时间.分钟</td>
 </tr>
 <tr>
-<td>消息预摘要</td>
-<td>低</td>
-<td>向量化前先用 LLM 压缩</td>
+<td>修炼与突破</td>
+<td>add 角色.属性.境界.当前进度</td>
 </tr>
 <tr>
-<td>消息分块</td>
-<td>低</td>
-<td>长消息递归分块</td>
+<td>渡劫系统</td>
+<td>每道天雷扣血扣灵气、渡劫成功&#x2F;失败处理</td>
 </tr>
 <tr>
-<td>上下文管理</td>
-<td>中</td>
-<td>检索后从 chat 数组移除</td>
+<td>战斗与消耗</td>
+<td>施法消耗灵气、受伤扣血</td>
 </tr>
 <tr>
-<td>跨集合查询</td>
-<td>低</td>
-<td>多 collection 合并搜索</td>
+<td>NPC 交互</td>
+<td>好感度、记忆、外貌状态、位置</td>
 </tr>
 <tr>
-<td>文件&#x2F;World Info RAG</td>
-<td>低</td>
-<td>仅实现聊天记录 RAG</td>
+<td>世界事件</td>
+<td>push 社交.事件.事件记录</td>
+</tr>
+<tr>
+<td>宗门系统</td>
+<td>贡献、任务更新</td>
 </tr>
 </tbody></table>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这次实现基本达到了预期目标——<strong>聊天记忆的核心流程跑通了</strong>。向量检索 + 滚动摘要这套双通道架构，在实际对话中能有效帮助 LLM”记住”之前的上下文。</p>
-<p>核心差距主要在可选的增强功能上。如果当前只需要基础的聊天记忆功能，现有实现已经够用。下一步可以考虑：</p>
-<ol>
-<li>补齐 embedding 来源抽象（支持本地模型）</li>
-<li>修正 rearrangeChat 的上下文压缩逻辑</li>
-<li>添加消息分块策略</li>
-</ol>
-<p>源码地址略。后续有空会继续迭代。</p>
+<p>AI 在生成回复时必须遵循这些指令，确保游戏状态的一致性。</p>
+<h2 id="核心功能模块"><a href="#核心功能模块" class="headerlink" title="核心功能模块"></a>核心功能模块</h2><h3 id="1-角色创建系统"><a href="#1-角色创建系统" class="headerlink" title="1. 角色创建系统"></a>1. 角色创建系统</h3><ul>
+<li>世界选择、天资选择、出身选择</li>
+<li>灵根选择、天赋选择、属性分配</li>
+</ul>
+<h3 id="2-游戏核心系统"><a href="#2-游戏核心系统" class="headerlink" title="2. 游戏核心系统"></a>2. 游戏核心系统</h3><ul>
+<li>角色详情、背包系统、功法系统</li>
+<li>关系网络、记忆中心、世界地图</li>
+<li>炼制系统、门派系统</li>
+</ul>
+<h3 id="3-存档管理"><a href="#3-存档管理" class="headerlink" title="3. 存档管理"></a>3. 存档管理</h3><ul>
+<li>多角色管理、5个存档槽位</li>
+<li>IndexedDB 本地存储 + 云端同步（可选）</li>
+</ul>
+<h3 id="4-AI-对话系统"><a href="#4-AI-对话系统" class="headerlink" title="4. AI 对话系统"></a>4. AI 对话系统</h3><ul>
+<li>多模型支持（Gemini、Claude、OpenAI、DeepSeek）</li>
+<li>思维链推理、向量记忆系统</li>
+<li>动态剧情生成</li>
+</ul>
+<h3 id="5-联机功能"><a href="#5-联机功能" class="headerlink" title="5. 联机功能"></a>5. 联机功能</h3><ul>
+<li>联机穿越、实时同步</li>
+<li>SillyTavern 嵌入支持</li>
+</ul>
+<h2 id="与传统游戏引擎的对比"><a href="#与传统游戏引擎的对比" class="headerlink" title="与传统游戏引擎的对比"></a>与传统游戏引擎的对比</h2><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>传统游戏引擎</th>
+<th>XianTu (AI 游戏引擎)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>逻辑计算</td>
+<td>代码引擎</td>
+<td>LLM + 提示词公式</td>
+</tr>
+<tr>
+<td>内容生成</td>
+<td>预定义内容</td>
+<td>动态生成</td>
+</tr>
+<tr>
+<td>扩展性</td>
+<td>需要更新代码</td>
+<td>更新提示词即可</td>
+</tr>
+<tr>
+<td>一致性</td>
+<td>确定性</td>
+<td>依赖提示词质量</td>
+</tr>
+</tbody></table>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>XianTu 项目展示了 AI 驱动游戏的全新范式——“AI 即游戏引擎”。通过将游戏逻辑交给 LLM 处理，实现了极高的内容动态性和扩展性。</p>
+<p>四层记忆系统解决了长对话中的上下文遗忘问题，CoT 思维链确保了 AI 输出的一致性和可解析性。这种架构对于构建 AI-Native 应用具有重要的参考价值。</p>
 
     </div>
 
@@ -369,7 +445,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://agathechristie.github.io/2026/03/06/sttt-memory-summary/" title="SillyTavern 记忆系统 Erlang 实现总结">https://agathechristie.github.io/2026/03/06/sttt-memory-summary/</a>
+    <a href="https://agathechristie.github.io/2026/03/06/xiantu-project-analysis/" title="XianTu（仙途）项目深度分析">https://agathechristie.github.io/2026/03/06/xiantu-project-analysis/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -380,10 +456,12 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/SillyTavern/" rel="tag"># SillyTavern</a>
-              <a href="/tags/Erlang/" rel="tag"># Erlang</a>
               <a href="/tags/RAG/" rel="tag"># RAG</a>
-              <a href="/tags/%E8%AE%B0%E5%BF%86%E7%B3%BB%E7%BB%9F/" rel="tag"># 记忆系统</a>
+              <a href="/tags/XianTu/" rel="tag"># XianTu</a>
+              <a href="/tags/%E4%BB%99%E9%80%94/" rel="tag"># 仙途</a>
+              <a href="/tags/AI%E6%B8%B8%E6%88%8F/" rel="tag"># AI游戏</a>
+              <a href="/tags/Vue3/" rel="tag"># Vue3</a>
+              <a href="/tags/%E4%BF%AE%E4%BB%99%E6%B8%B8%E6%88%8F/" rel="tag"># 修仙游戏</a>
           </div>
 
         
@@ -392,13 +470,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2024/08/04/e2csv/" rel="prev" title="erlang data2csv">
-      <i class="fa fa-chevron-left"></i> erlang data2csv
+    <a href="/2026/03/06/sttt-memory-summary/" rel="prev" title="SillyTavern 记忆系统 Erlang 实现总结">
+      <i class="fa fa-chevron-left"></i> SillyTavern 记忆系统 Erlang 实现总结
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2026/03/06/xiantu-project-analysis/" rel="next" title="XianTu（仙途）项目深度分析">
-      XianTu（仙途）项目深度分析 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -457,7 +532,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84"><span class="nav-number">1.2.</span> <span class="nav-text">核心架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8C%E8%AE%B0%E5%BF%86%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.2.1.</span> <span class="nav-text">双记忆系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%B5%81"><span class="nav-number">1.2.2.</span> <span class="nav-text">数据流</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%B2%E5%AE%9E%E7%8E%B0%E5%8A%9F%E8%83%BD"><span class="nav-number">1.3.</span> <span class="nav-text">已实现功能</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9C%85-%E5%8F%8C%E8%AE%B0%E5%BF%86%E6%9E%B6%E6%9E%84"><span class="nav-number">1.3.1.</span> <span class="nav-text">✅ 双记忆架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9C%85-%E5%A2%9E%E9%87%8F%E5%90%8C%E6%AD%A5"><span class="nav-number">1.3.2.</span> <span class="nav-text">✅ 增量同步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9C%85-%E5%90%91%E9%87%8F%E6%A3%80%E7%B4%A2"><span class="nav-number">1.3.3.</span> <span class="nav-text">✅ 向量检索</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9C%85-%E6%BB%9A%E5%8A%A8%E6%91%98%E8%A6%81"><span class="nav-number">1.3.4.</span> <span class="nav-text">✅ 滚动摘要</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9C%85-%E5%AD%98%E5%82%A8%E5%B1%82"><span class="nav-number">1.3.5.</span> <span class="nav-text">✅ 存储层</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91"><span class="nav-number">1.4.</span> <span class="nav-text">踩过的坑</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-rearrangeChat-%E7%90%86%E8%A7%A3%E9%94%99%E8%AF%AF"><span class="nav-number">1.4.1.</span> <span class="nav-text">1. rearrangeChat 理解错误</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%91%98%E8%A6%81%E5%AD%98%E5%82%A8%E4%BD%8D%E7%BD%AE"><span class="nav-number">1.4.2.</span> <span class="nav-text">2. 摘要存储位置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Embedding-%E6%9D%A5%E6%BA%90"><span class="nav-number">1.4.3.</span> <span class="nav-text">3. Embedding 来源</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AA%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%8A%9F%E8%83%BD"><span class="nav-number">1.5.</span> <span class="nav-text">未实现的功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.6.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E7%AE%80%E4%BB%8B"><span class="nav-number">1.1.</span> <span class="nav-text">项目简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8A%80%E6%9C%AF%E6%A0%88"><span class="nav-number">1.1.1.</span> <span class="nav-text">技术栈</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84%EF%BC%9A%E2%80%9DAI-%E5%8D%B3%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E%E2%80%9D"><span class="nav-number">1.2.</span> <span class="nav-text">核心架构：”AI 即游戏引擎”</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%90%E7%A4%BA%E8%AF%8D%E9%87%8C%E7%9A%84%E5%85%AC%E5%BC%8F-%E6%B8%B8%E6%88%8F%E8%A7%84%E5%88%99%E4%B9%A6"><span class="nav-number">1.2.1.</span> <span class="nav-text">提示词里的公式 &#x3D; 游戏规则书</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E5%B1%82%E8%AE%B0%E5%BF%86%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.3.</span> <span class="nav-text">四层记忆系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%B0%E5%BF%86%E6%B5%81%E8%BD%AC%E6%B5%81%E7%A8%8B"><span class="nav-number">1.3.1.</span> <span class="nav-text">记忆流转流程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CoT-%E6%80%9D%E7%BB%B4%E9%93%BE%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.4.</span> <span class="nav-text">CoT 思维链系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%8C%87%E4%BB%A4%E7%B1%BB%E5%88%AB"><span class="nav-number">1.4.1.</span> <span class="nav-text">核心指令类别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%E6%A8%A1%E5%9D%97"><span class="nav-number">1.5.</span> <span class="nav-text">核心功能模块</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E8%A7%92%E8%89%B2%E5%88%9B%E5%BB%BA%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.5.1.</span> <span class="nav-text">1. 角色创建系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%B8%B8%E6%88%8F%E6%A0%B8%E5%BF%83%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.5.2.</span> <span class="nav-text">2. 游戏核心系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%AD%98%E6%A1%A3%E7%AE%A1%E7%90%86"><span class="nav-number">1.5.3.</span> <span class="nav-text">3. 存档管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-AI-%E5%AF%B9%E8%AF%9D%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.5.4.</span> <span class="nav-text">4. AI 对话系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E8%81%94%E6%9C%BA%E5%8A%9F%E8%83%BD"><span class="nav-number">1.5.5.</span> <span class="nav-text">5. 联机功能</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8E%E4%BC%A0%E7%BB%9F%E6%B8%B8%E6%88%8F%E5%BC%95%E6%93%8E%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="nav-number">1.6.</span> <span class="nav-text">与传统游戏引擎的对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.7.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
